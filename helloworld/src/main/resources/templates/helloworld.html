@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="//d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
+    <script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
+
+  
+  
+    <title>Finite Automata</title>
+    <link th:href="@{/CSS/style.css}" rel="stylesheet" />
+    <script  th:src="@{/js/Parse.js}"></script>
+    
+    
+    
+</head>
+
+
+
+
+
+
+
+<body >
+  <!--for navigtion bar-->
+  <div class= "nav">
+    
+    <div class="topnav">
+      <a class="active" href="#home">Home</a>
+      <a href="https://medium.com/swlh/visualizing-thompsons-construction-algorithm-for-nfas-step-by-step-f92ef378581b" target="_blank">References</a>
+      <a href="https://en.wikipedia.org/wiki/Regular_expression" target="_blank">About</a>
+    </div>
+  </div>
+
+
+  <!--for dec -->
+  <div class="row">
+    <span class="col-md-3">
+      <div class="well">
+        <h4>Introduction</h4>
+        <hr>
+        <p>
+          Convert Regular expressions to  Finite automaton.
+        </p>
+      </div>
+    </span>
+    <span class="col-md-3">
+      <div class="well">
+        <h4>Supported Operations</h4>
+        <ul>
+          <li>Kleene = *</li>
+          <li>Union= +</li>
+          <li>Concatenation</li>
+    
+            </ul>
+      </div>
+    </span>
+    <span class="col-md-3">
+      <div class="well">
+        <h4>Examples</h4>
+        <ul>
+          <li>(a+b)*</li>
+          <li>(a*+b*)*</li>
+          <li>((ϵ+a)b*)*</li>
+          <li>(a+b)*abb(a+b)*</li>
+        </ul>
+      </div>
+    </span>
+</div>
+
+
+
+
+
+<div class="inputField">
+
+  
+  
+
+ 
+ 
+ 
+ 
+ <!--input validation and error checking-->
+    <script>
+       function validateForm() {
+     var x = document.forms["in"]["regular_expression"].value;
+     var s=parseRegex(x);
+     if(typeof(s)=="string"){
+       document.getElementById("error").innerHTML ="*"+s;
+       return false;
+     }
+    
+    }
+     </script>
+ 
+     <!--For taking inputes HTML Code-->
+     <div class="in">
+         <div class="container">
+             <form action="/hello" name="in"  onsubmit="return validateForm()" method="POST" >
+             <div class="row">
+             <div class="col-25">
+                 <label for="regular_expression">Regular Expression</label>
+             </div>
+             <div class="col-75">
+                
+                   <p id="error" style="color: red;"></p>
+                  
+                 
+                 <input type="text"  id="regular_expression" name="regular_expression" placeholder="(a+b)*">
+
+                 <script>
+                    var er='[[${error}]]';
+                    var re ='[[${inputreturn}]]';
+                    document.getElementById("error").innerHTML =er;
+                    document.getElementById("regular_expression").value =re; 
+                </script>
+                 </div>
+                 </div>
+                 
+             <div class="row">
+                 <div class="col-25">
+                     <label for="country">Select</label>
+                 </div>
+                 <div class="col-75">
+                     <select id="country" name="country">
+                     <option value="E-NFA">E-NFA</option>
+                     <option value="NFA">NFA</option>
+                     <option value="DFA">DFA</option>
+                     <option value="min-DFA">Min-DFA</option>
+                     </select>
+                 </div>
+                 </div>
+                 
+                 <div class="row">
+                 <input type="submit" value="Convert">
+                 </div>
+                 <a th:href="@{/full}" class="bt"><input type="button" class="button" value="For Full View"></a>
+                 
+                 </form>
+             </div>
+ 
+                 
+         </div>
+ 
+ </div>
+
+
+
+
+ 
+ <div class="render">
+
+  
+
+  <!--style for te svg tag and graph padding and shadow-->
+  <style>
+    svg{
+      width: 70%;
+      border-block-end-color: black;
+     
+    }
+    
+    #graph{
+      box-shadow: 10px 5px 5px rgb(214, 213, 213);
+      margin-top:10px;
+      padding: 15px;
+    }
+  </style>
+
+
+
+
+ 
+    <div id="graph" style="text-align: center;">
+    </div>
+    <!--for rendering the dot file js code-->
+    <script>
+    
+    var s='[[${message}]]';
+    var c =s.replaceAll("&quot;",'"');
+    var d =c.replaceAll("&gt;",'>');
+    var dotSrc =d;
+    console.log(dotSrc)
+    var dotSrcLines;
+    var t = d3.transition()
+    .duration(2000)
+    .ease(d3.easeLinear);
+
+
+d3.select("#graph").graphviz()
+    
+    .attributer(function(d) {
+        if (d.tag == "polygon") {
+            if(d.attributes.fill =="white"){
+              d.attributes.fill = "#EEEEEE";
+            }
+           
+        }
+        
+    })
+    .renderDot(dotSrc);
+
+    
+
+  
+    </script>
+    
+    
+    </div>
+ 
+</div>
+ 
+
+
+
+
+    
+  
+ 
+      
+
+    
+</body>
+</html>
